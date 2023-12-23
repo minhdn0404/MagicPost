@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- include partials file -->
+<%- include('./partials/head.ejs') %>
+
+<body>
+
+    <!-- include partials file -->
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="point content">
+        <h2>Points page</h2>
+
+        <!-- Server-side rendering -->
+        <% if (points.length > 0) { %>
+            <% points.forEach(p => { %>
+                <h3 class="name"><%= p.name %></h3>
+                <p class="address"><%= p.address %></p>
+                <p class="type"><%= p.type %></p>
+                
+            <% })%>
+        <% } else { %>
+            <p>No point to display</p>
+        <% } %>
+
+        
+    </div>
+
+    <!-- include partials file -->
+    <%- include('./partials/footer.ejs') %>
+</body>
+</html>
