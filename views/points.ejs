@@ -23,11 +23,52 @@
         <% } else { %>
             <p>No point to display</p>
         <% } %>
+    </div>
 
-        
+    <div class="create-point content">
+        <br>
+        <h2>Create new point</h2>
+        <form id="create-point" action="/manager/points" method="post">
+            <label for="name">Name</label><br>
+            <input type="text" id="pointName" name="pointName" required><br>
+            <label for="address">Address</label><br>
+            <input type="text" id="pointAddress" name="pointAddress" required><br>
+            <label for="pointType">Type</label><br>
+            <select name="pointType" id="pointType">
+                <option value="gather">Gather</option>
+                <option value="trans">Trans</option>
+            </select><br>
+            <button type="submit">Create</button>
+        </form>
     </div>
 
     <!-- include partials file -->
     <%- include('./partials/footer.ejs') %>
 </body>
+<script>
+    $(document).ready(function() {
+        // Form post request
+        $('#create-point').submit(function(e) {
+            e.preventDefault();
+
+            // Form atttributes
+            var pointName = $('#pointName').val();
+            var pointAddress = $('#pointAddress').val();
+            var pointType = $('#pointType').val();
+            var url = $(this).attr('action');
+
+            console.log(pointName, " ", pointAddress, " ", pointType, " ", url);
+
+            $.post(url, {
+                name: pointName, 
+                address: pointAddress, 
+                type: pointType})
+            .done(function(data) {
+                location.reload();
+                console.log("Point saved");
+                console.log(data);
+            })
+        })
+    })
+</script>
 </html>

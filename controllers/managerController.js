@@ -23,7 +23,39 @@ const manager_points = (req, res) => {
     })
 }
 
+const manager_create_point = (req, res) => {
+    console.log(req.body);
+    Point.findOne({ address: req.body.address })
+    .then(point => {
+        // Check if a document with the same address was found
+        const addressExists = !!point;
+
+        // `addressExists` will be true if a document with the same address was found
+        if (addressExists == true) {
+            console.error("Already existed address")
+            
+            res.status(409).json({ error: 'Conflict - Object with the same property value already exists' });
+        } else {
+            // Create new point and save it
+            const point = new Point(req.body);
+            point.save()
+            .then((data) => {
+                // Send the data back to frontend
+                res.json(data)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+    })
+    .catch(err => {
+        // Handle the error
+        console.error(err);
+    });
+}
+
 module.exports = {
     manager_index,
-    manager_points
+    manager_points,
+    manager_create_point
 }
