@@ -15,9 +15,12 @@
         <!-- Server-side rendering -->
         <% if (points.length > 0) { %>
             <% points.forEach(p => { %>
-                <h3 class="name"><%= p.name %></h3>
-                <p class="address"><%= p.address %></p>
-                <p class="type"><%= p.type %></p>
+                <a class="single" href="/manager/points/<%= p._id %>">
+                    <h3 class="name"><%= p.name %></h3>
+                </a>
+                <br>
+                <a id="delete-point" class="delete" data-doc="<%= p._id %>">Delete</a>
+                <br>
                 
             <% })%>
         <% } else { %>
@@ -45,30 +48,4 @@
     <!-- include partials file -->
     <%- include('./partials/footer.ejs') %>
 </body>
-<script>
-    $(document).ready(function() {
-        // Form post request
-        $('#create-point').submit(function(e) {
-            e.preventDefault();
-
-            // Form atttributes
-            var pointName = $('#pointName').val();
-            var pointAddress = $('#pointAddress').val();
-            var pointType = $('#pointType').val();
-            var url = $(this).attr('action');
-
-            console.log(pointName, " ", pointAddress, " ", pointType, " ", url);
-
-            $.post(url, {
-                name: pointName, 
-                address: pointAddress, 
-                type: pointType})
-            .done(function(data) {
-                location.reload();
-                console.log("Point saved");
-                console.log(data);
-            })
-        })
-    })
-</script>
 </html>

@@ -33,7 +33,7 @@ const manager_create_point = (req, res) => {
         // `addressExists` will be true if a document with the same address was found
         if (addressExists == true) {
             console.error("Already existed address")
-            
+
             res.status(409).json({ error: 'Conflict - Object with the same property value already exists' });
         } else {
             // Create new point and save it
@@ -54,8 +54,37 @@ const manager_create_point = (req, res) => {
     });
 }
 
+const manager_point_details = (req, res) => {
+    const id = req.params.id;
+    // console.log(id)
+
+    Point.findById(id)
+        .then((result) => {
+            res.render('pointDetails', {point: result, title: 'Point Details'})
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+}
+
+const manager_point_delete = (req, res) => {
+    const id = req.params.id;
+
+    // Delete point by ID
+    Point.findByIdAndDelete(id)
+        .then((result) => {
+            console.log("Deleted")
+            res.json({redirect: '/manager/points'})
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+}
+
 module.exports = {
     manager_index,
     manager_points,
-    manager_create_point
+    manager_create_point,
+    manager_point_details,
+    manager_point_delete
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- include partials file -->
+<%- include('./partials/head.ejs') %>
+
+<body>
+
+    <!-- include partials file -->
+    <%- include('./partials/nav.ejs') %>
+    <h1>Point Details</h1>
+    <div class="detail content">
+        <h3 class="name">Name: <%= point.name %></h3>
+        <p class="address">Address: <%= point.address %></p>
+        <p class="type">Type: <%= point.type %></p>
+
+        <a id="delete-point" class="delete" data-doc="<%= point._id %>">Delete</a>
+    </div>
+
+    <!-- include partials file -->
+    <%- include('./partials/footer.ejs') %>
+</body>
+</html>
