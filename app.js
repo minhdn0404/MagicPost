@@ -19,6 +19,7 @@ const app = express();
 mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true})
     .then((result) => console.log("Connected to db"))
     .catch((err) => console.log(err));
+mongoose.Promise = global.Promise;
 
 // Port
 app.listen(PORT);
@@ -49,5 +50,8 @@ app.get("/verifyrole", Verify , VerifyRole, (req, res) => {
 });
 
 app.use("/auth", authenticationRoute);
+
+// Transcap Router
+app.use('/transcap', transcapRouter);
 
 export {URI, PORT, SECRET_ACCESS_TOKEN, app};
