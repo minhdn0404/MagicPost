@@ -1,3 +1,4 @@
+const { trusted } = require('mongoose');
 const Account = require('../models/account');
 const Point = require('../models/point')
 
@@ -180,7 +181,52 @@ const manager_captain_create = (req, res) => {
     });
 }
 
+const manager_captain_details = (req, res) => {
+    const id = req.params.id;
+    Account.findById(id)
+    .then((result) => {
+        res.json(result)
+    })
+    .catch((error) => {
+        res.status(404).json({error: "Not found"})
+    })
+}
 
+const manager_captain_update = (req, res) => {
+    const id = req.params.id
+    Account.findByIdAndUpdate(id, req.body, {new: true})
+    .then(updatedAcc => {
+        if (!updatedAcc) {
+            return res.status(404).json({error: "Account not found"})
+        }
+        res.json(updatedAcc);
+    })
+    .catch(error => {
+        console.error("Error updating account: ", error);
+        res.status(500).json({error: "Internal Server Error"})
+    })
+    
+}
+
+const manager_captain_delete = (req, res) => {
+    const id = req.params.id;
+    Account.findByIdAndDelete(id)
+    .then((data_removed) => {
+        // Update point managed
+        Point.findByIdAndUpdate(data_removed.capPointID, {managed: false}, {new: true})
+        .then(updatedPoint => {
+            console.log(updatedPoint);
+            res.json(data_removed)
+        })
+        .catch(error => {
+            console.error("Error updating Point:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        });
+    })
+    .catch((error) => {
+        res.status(404).json({error: "Not found"})
+    })
+}
 
 module.exports = {
     manager_index,
@@ -191,5 +237,8 @@ module.exports = {
     manager_point_delete,
     manager_captain_get,
     manager_captain_get_points,
-    manager_captain_create
+    manager_captain_create,
+    manager_captain_update,
+    manager_captain_details,
+    manager_captain_delete
 }

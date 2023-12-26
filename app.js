@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser') // Must be placed before router
 const managerRouter = require('./routers/managerRouter.js');
+const transcapRouter = require('./routers/transcapRouter.js');
 
 const app = express();
 
@@ -21,15 +22,18 @@ app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 
-app.get('/', (req, res) => {
-    res.redirect('/manager');
-})
+// app.get('/', (req, res) => {
+//     res.redirect('/manager');
+// })
 
 // Pass json data to the request object
 app.use(bodyParser.json())
 
 // Manager Router
 app.use('/manager', managerRouter);
+
+// Transcap Router
+app.use('/transcap', transcapRouter);
 
 // 404 page
 app.use((req, res, err) => {

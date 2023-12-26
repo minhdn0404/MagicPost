@@ -30,4 +30,13 @@ router.post('/accounts', managerController.manager_captain_get_points)
 // Create new captain account
 router.post('/accounts/captain', managerController.manager_captain_create)
 
+// Get a captain info
+router.get('/accounts/:id', managerController.manager_captain_details)
+
+// Update captain info
+router.put('/accounts/:id', managerController.manager_captain_update)
+
+// Delete captain account
+router.delete('/accounts/:id', managerController.manager_captain_delete)
+
 module.exports = router;
