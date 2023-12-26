@@ -1,5 +1,5 @@
-const Account = require('../models/account');
-const Point = require('../models/point')
+import Account from '../models/account.js';
+import Point from '../models/point.js';
 
 // Manager function
 
@@ -81,7 +81,7 @@ const manager_point_delete = (req, res) => {
         })
 }
 
-module.exports = {
+export default {
     manager_index,
     manager_points,
     manager_create_point,

@@ -1,6 +1,11 @@
-import User from "../models/User.js";
-import Blacklist from "../models/blacklist";
+import User from "../models/user.js";
+import Blacklist from "../models/blacklist.js";
 import bcrypt from "bcrypt";
+
+function checkRole(role) {
+    const roles = ["admin", "p-c_head", "p-s_head", "p-c_staff", "p-s_clerk", "none"];
+    return roles.includes(role);
+}
 
 /**
  * @route POST v1/auth/register
@@ -10,23 +15,62 @@ import bcrypt from "bcrypt";
 export async function Register(req, res) {
     // get required variables from request body
     // using es6 object destructing
-    const { username, password } = req.body;
     try {
+
         // create an instance of a user
-        const newUser = new User({
-            username,
-            password,
-        });
+        let newUser;
+        const {role : _role} = req.body;
+        if(req.check.isAdmin) {
+            if(! (checkRole(_role))) {
+                console.warn("[%s] Admin is trying to create a user with invalid role! : \"%s\"", Date.now().toLocaleString("vi"), _role);
+                return res.status(400).json({
+                    status: "failed",
+                    data: [],
+                    message: "Not a valid role",
+                });
+            }
+            newUser = new User({
+                username : req.body.username,
+                password : req.body.password,
+                role : _role
+            });
+        }
+        if(req.check.isPSHEAD) {
+            newUser = new User({
+                username : req.body.username,
+                password : req.body.password,
+                role : "p-s_clerk"
+            });
+        }
+        if(req.check.isPCHEAD) {
+            newUser = new User({
+                username : req.body.username,
+                password : req.body.password,
+                role : "p-c_staff"
+            });
+        }
+        if(newUser === undefined) {
+            console.warn("[%s] Someone without permission is trying to create a user!", Date.now().toLocaleString("vi"))
+            return res.status(400).json({
+                status: "failed",
+                data: [],
+                message: "Not have permission to create user",
+            });
+        }
         // Check if user already exists
-        const existingUser = await User.findOne({ username });
-        if (existingUser)
+        const existingUser = await User.findOne({ username: req.body.username });
+        if (existingUser){
+            console.warn("[%s] User is trying to recreate an existing user", Date.now().toLocaleString("vi"))
             return res.status(400).json({
                 status: "failed",
                 data: [],
                 message: "It seems you already have an account, please log in instead.",
             });
+        }
         const savedUser = await newUser.save(); // save new user into the database
         const { password , role, ...user_data } = savedUser._doc;
+
+        console.info("[%s] An user with username \"%s\" and role \"%s\" has been created", Date.now().toLocaleString("vi"), user_data.username, role);
         res.status(200).json({
             status: "success",
             data: [user_data],
@@ -40,6 +84,7 @@ export async function Register(req, res) {
             data: [],
             message: "Internal Server Error",
         });
+        console.error(err)
     }
     res.end();
 }
@@ -51,10 +96,9 @@ export async function Register(req, res) {
  */
 export async function Login(req, res) {
     // Get variables for the login process
-    const { email } = req.body;
     try {
         // Check if user exists
-        const user = await User.findOne({ email }).select("+password");
+        const user = await User.findOne({ username: req.body.username }).select("+password");
         if (!user)
             return res.status(401).json({
                 status: "failed",
@@ -88,7 +132,8 @@ export async function Login(req, res) {
 
         const user_data = {
             username,
-            role
+            role,
+            token: accessToken
         }
 
         res.cookie(
@@ -96,6 +141,7 @@ export async function Login(req, res) {
             accessToken,
             options
         )
+        console.info("[%s] An user with username \"%s\" and role \"%s\" has just login", Date.now().toLocaleString("vi"), user_data.username, role);
         res.status(200).json({
             status: "success",
             data: [user_data],
@@ -108,6 +154,7 @@ export async function Login(req, res) {
             data: [],
             message: "Internal Server Error",
         });
+        console.error(err)
     }
     res.end();
 }
@@ -119,10 +166,11 @@ export async function Login(req, res) {
  */
 export async function Logout(req, res) {
     try {
-        const authHeader = req.headers['cookie']; // get the session cookie from request header
-        if (!authHeader) return res.sendStatus(204); // No content
-        const cookie = authHeader.split('=')[1]; // If there is, split the cookie string to get the actual jwt token
-        const accessToken = cookie.split(';')[0];
+        const authHeader = req.headers["authorization"]; // get the session cookie from request header
+
+        if (!authHeader) return res.sendStatus(401)
+
+        const accessToken = authHeader.replace('Bearer ', '');
         const checkIfBlacklisted = await Blacklist.findOne({ token: accessToken }); // Check if that token is blacklisted
         // if true, send a no content response.
         if (checkIfBlacklisted) return res.sendStatus(204);
@@ -139,6 +187,7 @@ export async function Logout(req, res) {
             status: 'error',
             message: 'Internal Server Error',
         });
+        console.error(err)
     }
     res.end();
 }

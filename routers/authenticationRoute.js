@@ -2,6 +2,8 @@ import express from "express";
 import {Register, Login, Logout} from "../controllers/authenticationController.js";
 import Validate from "../middleware/validate.js";
 import { check } from "express-validator";
+import {RoleChecker} from "../middleware/roleChecker.js";
+import Verify from "../middleware/verifyAccessToken.js";
 
 const router = express.Router();
 
@@ -19,6 +21,8 @@ router.post(
         .isLength({ min: 8 })
         .withMessage("Must be at least 8 chars long"),
     Validate,
+    Verify,
+    RoleChecker,
     Register
 );
 

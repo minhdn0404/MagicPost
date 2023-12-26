@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 // Point Schema
@@ -30,4 +31,4 @@ const Point = mongoose.model('Point', pointSchema)
 // var p = Point({name: 'p7', address: '141 TĐN', type: 'gather'}).save()
 // var p = Point({name: 'p8', address: '222 Pho N', type: 'trans'}).save()
 
-module.exports = Point;
+export default Point;

@@ -1,5 +1,5 @@
-const express = require('express');
-const managerController = require('../controllers/managerController');
+import express from 'express';
+import managerController from '../controllers/managerController.js';
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.get('/points/:id', managerController.manager_point_details)
 // Delete a point
 router.delete('/points/:id', managerController.manager_point_delete)
 
-module.exports = router;
+export default router;

@@ -4,7 +4,7 @@ export function VerifyRole(req, res, next) {
         const { role } = user; // extract the user role
         // check if user has no advance privileges
         // return an unathorized response
-        if (role !== "0x88") {
+        if (role !== "admin") {
             return res.status(401).json({
                 status: "failed",
                 message: "You are not authorized to view this page.",

@@ -1,25 +1,27 @@
 import jwt from 'jsonwebtoken';
-import User from "../models/User.js";
-import {SECRET_ACCESS_TOKEN} from "../app";
-import Blacklist from "../models/blacklist";
+import User from "../models/user.js";
+import {SECRET_ACCESS_TOKEN} from "../app.js";
+import Blacklist from "../models/blacklist.js";
 
 export async function Verify(req, res, next) {
-    const authHeader = req.headers["cookie"]; // get the session cookie from request header
+    const authHeader = req.headers["authorization"]; // get the session cookie from request header
 
-    if (!authHeader) return res.sendStatus(401); // if there is no cookie from request header, send an unauthorized response.
-    const cookie = authHeader.split("=")[1]; // If there is, split the cookie string to get the actual jwt token
-    const accessToken = cookie.split(";")[0];
+    if (!authHeader) return res.sendStatus(401)
+
+    const accessToken = authHeader.replace('Bearer ', '');
     const checkIfBlacklisted = await Blacklist.findOne({ token: accessToken }); // Check if that token is blacklisted
     // if true, send an unathorized message, asking for a re-authentication.
-    if (checkIfBlacklisted)
+    if (checkIfBlacklisted){
+        console.error("[%s] An user has just tried to access a blacklisted token : \"%s\"", Date.now().toLocaleString("vi"), accessToken);
         return res
             .status(401)
             .json({ message: "This session has expired. Please login" });
+    }
     // if token has not been blacklisted, verify with jwt to see if it has been tampered with or not.
-    // that's like checking the integrity of the accessToken
     jwt.verify(accessToken, SECRET_ACCESS_TOKEN, async (err, decoded) => {
         if (err) {
             // if token has been altered, return a forbidden error
+            console.error("[%s] An user has just tried to access a tampered token with token \"%s\"", Date.now().toLocaleString("vi"), accessToken);
             return res
                 .status(401)
                 .json({ message: "This session has expired. Please login" });

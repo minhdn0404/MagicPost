@@ -18,8 +18,9 @@ const UserSchema = new mongoose.Schema(
         },
         role: {
             type: String,
+            enum: ["admin", "p-c_head", "p-s_head", "p-c_staff", "p-s_clerk", "none"],
             required: true,
-            default: "0x01",
+            default: "none",
         },
     },
     { timestamps: true }
