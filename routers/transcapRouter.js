@@ -9,7 +9,7 @@ router.get('/', transcapController.transcap_index)
 // Get trans_staffs info
 router.get('/accounts', transcapController.transcap_staffs_get)
 
-// Create trans_staffs account
+// Create trans_staff account
 router.post('/accounts', transcapController.transcap_staff_create)
 
 // Update trans_staff info

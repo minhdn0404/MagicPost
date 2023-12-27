@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser') // Must be placed before router
 const managerRouter = require('./routers/managerRouter.js');
 const transcapRouter = require('./routers/transcapRouter.js');
+const gathercapRouter = require('./routers/gathercapRouter.js');
 
 const app = express();
 
@@ -38,6 +39,9 @@ app.use('/manager', managerRouter);
 
 // Transcap Router
 app.use('/transcap', transcapRouter);
+
+// Gathercap router
+app.use('/gathercap', gathercapRouter);
 
 // 404 page
 app.use((req, res, err) => {

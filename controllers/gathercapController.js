@@ -1,14 +1,14 @@
 const Account = require('../models/account');
 const Point = require('../models/point')
 
-// Transcap function
+// Gathercap function
 
-const transcap_index = (req, res, next) => {
+const gathercap_index = (req, res, next) => {
     const thisID = req.body.id;
     // Store the ID in the session
-    req.session.transcapID = thisID
+    req.session.gathercapID = thisID
 
-    Account.find({$and: [{_id: thisID}, {role: "trans_cap"}]})
+    Account.find({$and: [{_id: thisID}, {role: "gather_cap"}]})
     .then((result) => {
         res.json(result)
     })
@@ -17,10 +17,9 @@ const transcap_index = (req, res, next) => {
     })
 }
 
-const transcap_staffs_get = (req, res) => {
-    const thisID = req.session.transcapID;
-    
-    Account.find({$and: [{captainID: thisID}, {role: "trans_staff"}]}).sort({createdAt: -1})
+const gathercap_staffs_get = (req, res) => {
+    const thisID = req.session.gathercapID;
+    Account.find({$and: [{captainID: thisID}, {role: "gather_staff"}]}).sort({createdAt: -1})
     .then((result) => {
         if (result.length === 0) {
             res.status(404).json({error: "No staff found"})
@@ -34,9 +33,9 @@ const transcap_staffs_get = (req, res) => {
     })
 }
 
-const transcap_staff_create = (req, res) => {
-    const thisID = req.session.transcapID;
-    // res.json({test: thisID})
+const gathercap_staff_create = (req, res) => {
+    const thisID = req.session.gathercapID;
+    
     Account.findOne({ username: req.body.username})
     .then(acc_u => {
         const acc_u_Ext =!! acc_u;
@@ -51,7 +50,7 @@ const transcap_staff_create = (req, res) => {
                 if (acc_p_Ext == true) {
                     res.status(409).json({ error: 'Conflict - Password already existed' })
                 } else {
-                    if (req.body.role == "trans_staff") {
+                    if (req.body.role == "gather_staff") {
                         Account.create(req.body)
                         .then(newAcc => {
                             res.status(201).json(newAcc);
@@ -77,7 +76,7 @@ const transcap_staff_create = (req, res) => {
     })
 }
 
-const transcap_staff_update = (req, res) => {
+const gathercap_staff_update = (req, res) => {
     const id = req.params.id
     Account.findByIdAndUpdate(id, req.body, {new: true})
     .then(updatedAcc => {
@@ -92,7 +91,7 @@ const transcap_staff_update = (req, res) => {
     })
 }
 
-const transcap_staff_delete = (req, res) => {
+const gathercap_staff_delete = (req, res) => {
     const id = req.params.id;
     Account.findByIdAndDelete(id)
     .then((data_removed) => {
@@ -104,9 +103,9 @@ const transcap_staff_delete = (req, res) => {
 }
 
 module.exports = {
-    transcap_index,
-    transcap_staffs_get,
-    transcap_staff_create,
-    transcap_staff_update,
-    transcap_staff_delete
+    gathercap_index,
+    gathercap_staffs_get,
+    gathercap_staff_create,
+    gathercap_staff_update,
+    gathercap_staff_delete
 }
