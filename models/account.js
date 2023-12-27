@@ -21,6 +21,13 @@ const accountSchema = new Schema({
             return this.role === "trans_cap" || this.role === "gather_cap";
         },
         message: 'capPointID is required for role "trans_cap" or "gather_cap"'
+    },
+    captainID: {
+        type: String,
+        required: function() {
+            return this.role === "trans_staff" || this.role === "gather_staff";
+        },
+        message: 'captainID is required for role "trans_staff" or "gather_staff"'
     }
 }, {timestamps: true}); // Automatically generate timestamp properties on the document
 
@@ -34,5 +41,9 @@ const Account = mongoose.model('Account', accountSchema)
 // var mng1 = Account({username: 'thanhcong', password: '4n3iub6i33', role: 'trans_cap'}).save()
 // var mng1 = Account({username: 'vinhlord', password: '5n867ijbi57', role: 'gather_cap'}).save()
 
+// var mng1 = Account({username: 'staff1', password: '6bh542u6iv', role: 'trans_staff', captainID: '658a89faa3ae804d7f5a98e8'}).save()
+// var mng1 = Account({username: 'staff2', password: 'h9th78rt', role: 'gather_staff', captainID: '658a88fb6b32ae1da4a86d05'}).save()
+// var mng1 = Account({username: 'staff3', password: 'n786yh', role: 'trans_staff', captainID: '65880c32c54a658ddb910e07'}).save()
+// var mng1 = Account({username: 'staff4', password: 'rb47368trg298', role: 'gather_staff', captainID: '65880c32c54a658ddb910e08'}).save()
 
 module.exports = Account;

@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const session = require('express-session');
 const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser') // Must be placed before router
@@ -22,12 +23,15 @@ app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 
-// app.get('/', (req, res) => {
-//     res.redirect('/manager');
-// })
 
 // Pass json data to the request object
 app.use(bodyParser.json())
+
+app.use(session({
+    secret: 'peter', 
+    resave: false,
+    saveUninitialized: true,
+}));
 
 // Manager Router
 app.use('/manager', managerRouter);
