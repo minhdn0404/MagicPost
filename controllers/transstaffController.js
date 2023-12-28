@@ -15,7 +15,7 @@ const transstaff_index = (req, res, next) => {
         req.session.captainID = staff.captainID
         Account.findOne({_id: req.session.captainID})
         .then((captain) => { 
-            // PointID thatr this captainID manage
+            // PointID that this captainID manage
             req.session.capPointID = captain.capPointID;
             Point.findOne({_id: req.session.capPointID})
             .then((thisPoint) => {
@@ -53,7 +53,7 @@ const transstaff_shipment_create = (req, res) => {
         progress: [
             {
                 // Prepare to go out
-                action: "Out",
+                action: "Send",
                 pointID: req.session.capPointID,
                 fromID: req.session.capPointID,
                 toID: req.session.gatherPointID,
@@ -73,7 +73,7 @@ const transstaff_shipment_create = (req, res) => {
     res.json(shipmentObject)
 }
 
-const transstaff_shipment_update = (req, res) => {
+const transstaff_shipment_update_info = (req, res) => {
     const id = req.params.id
     Shipment.findByIdAndUpdate(id, req.body, {new: true})
     .then(updatedShipment => {
@@ -102,6 +102,6 @@ const transstaff_shipment_delete = (req, res) => {
 module.exports = {
     transstaff_index,
     transstaff_shipment_create,
-    transstaff_shipment_update,
+    transstaff_shipment_update_info,
     transstaff_shipment_delete
 }

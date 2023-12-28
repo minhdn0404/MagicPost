@@ -34,12 +34,16 @@ const shipmentSchema = new Schema({
     
     progress: {
         type: [{
-                action: String,
-                pointID: String,
-                fromID: String,
-                toID: String,
-                date: Date,
-                staffID: String
+            action: {
+                type: String,
+                enum: ['Send', 'Receive'],
+                required: [true, 'Action is required'],
+            },
+            pointID: String,
+            fromID: String,
+            toID: String,
+            date: Date,
+            staffID: String
         }],
         required: [true, "Progress is required"]
     },

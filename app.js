@@ -8,6 +8,7 @@ const managerRouter = require('./routers/managerRouter.js');
 const transcapRouter = require('./routers/transcapRouter.js');
 const gathercapRouter = require('./routers/gathercapRouter.js');
 const transstaffRouter = require('./routers/transstaffRouter.js');
+const gatherstaffRouter = require('./routers/gatherstaffRouter.js');
 
 const app = express();
 
@@ -46,6 +47,9 @@ app.use('/gathercap', gathercapRouter);
 
 // Transstaff router
 app.use('/transstaff', transstaffRouter);
+
+// Gatherstaff router
+app.use('/gatherstaff', gatherstaffRouter);
 
 // 404 page
 app.use((req, res, err) => {
