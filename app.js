@@ -7,6 +7,7 @@ const bodyParser = require('body-parser') // Must be placed before router
 const managerRouter = require('./routers/managerRouter.js');
 const transcapRouter = require('./routers/transcapRouter.js');
 const gathercapRouter = require('./routers/gathercapRouter.js');
+const transstaffRouter = require('./routers/transstaffRouter.js');
 
 const app = express();
 
@@ -42,6 +43,9 @@ app.use('/transcap', transcapRouter);
 
 // Gathercap router
 app.use('/gathercap', gathercapRouter);
+
+// Transstaff router
+app.use('/transstaff', transstaffRouter);
 
 // 404 page
 app.use((req, res, err) => {
