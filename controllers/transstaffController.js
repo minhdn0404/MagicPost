@@ -43,7 +43,7 @@ const transstaff_index = (req, res, next) => {
 
 }
 
-const transstaff_create_shipment = (req, res) => {
+const transstaff_shipment_create = (req, res) => {
     const senderInfo = req.body.senderInfo;
     const receiverInfo = req.body.receiverInfo;
  
@@ -52,12 +52,13 @@ const transstaff_create_shipment = (req, res) => {
         receiverInfo,
         progress: [
             {
+                // Prepare to go out
                 action: "Out",
                 pointID: req.session.capPointID,
                 fromID: req.session.capPointID,
                 toID: req.session.gatherPointID,
                 date: new Date(),
-                staffID: req.session.staffID
+                staffID: req.session.transstaffID
             },
             // Add more progress items as needed
         ],
@@ -69,10 +70,38 @@ const transstaff_create_shipment = (req, res) => {
     // res.status(200).json({senderInfo, receiverInfo});
     // console.log(req.session.transstaffID, req.session.captainID, req.session.capPointID, req.session.gatherPointID)
     var newShipment = Shipment(shipmentObject).save();
-    res.json(newShipment)
+    res.json(shipmentObject)
+}
+
+const transstaff_shipment_update = (req, res) => {
+    const id = req.params.id
+    Shipment.findByIdAndUpdate(id, req.body, {new: true})
+    .then(updatedShipment => {
+        if (!updatedShipment) {
+            return res.status(404).json({error: "Shipment not found"})
+        }
+        res.json(updatedShipment);
+    })
+    .catch(error => {
+        console.error("Error updating shipment: ", error);
+        res.status(500).json({error: "Internal Server Error"})
+    })
+}
+
+const transstaff_shipment_delete = (req, res) => {
+    const id = req.params.id;
+    Shipment.findByIdAndDelete(id)
+    .then((data_removed) => {
+        res.json(data_removed)
+    })
+    .catch((error) => {
+        res.status(404).json({error: "Not found"})
+    })
 }
 
 module.exports = {
     transstaff_index,
-    transstaff_create_shipment
+    transstaff_shipment_create,
+    transstaff_shipment_update,
+    transstaff_shipment_delete
 }
