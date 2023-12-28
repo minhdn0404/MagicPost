@@ -15,6 +15,7 @@ router.put('/shipments/:id', transstaffController.transstaff_shipment_update_inf
 // Delete shipment
 router.delete('/shipments/:id', transstaffController.transstaff_shipment_delete)
 
-
+// Send shipment to gather point
+router.put('/shipments/:id/send', transstaffController.transstaff_shipment_send)
 
 module.exports = router;

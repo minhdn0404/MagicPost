@@ -53,7 +53,7 @@ const transstaff_shipment_create = (req, res) => {
         progress: [
             {
                 // Prepare to go out
-                action: "Send",
+                from: "Trans",
                 pointID: req.session.capPointID,
                 fromID: req.session.capPointID,
                 toID: req.session.gatherPointID,
@@ -99,9 +99,35 @@ const transstaff_shipment_delete = (req, res) => {
     })
 }
 
+const transstaff_shipment_send = (req, res) => {
+    const id = req.params.id
+    Shipment.findOne({ _id: id })
+        .then(updatingShipment => {
+            if (!updatingShipment) {
+                return res.status(404).json({ error: "Shipment not found" });
+            }
+
+            // Add the new status to the status array
+            updatingShipment.status.push("Pre-Transit");
+
+            // Save the updated shipment to the database
+            return updatingShipment.save();
+        })
+        .then(updatedShipment => {
+            // Respond with the entire updated shipment object
+            res.json(updatedShipment.status);
+        })
+        .catch(error => {
+            console.error("Error updating shipment: ", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        });
+
+}
+
 module.exports = {
     transstaff_index,
     transstaff_shipment_create,
     transstaff_shipment_update_info,
-    transstaff_shipment_delete
+    transstaff_shipment_delete,
+    transstaff_shipment_send
 }
