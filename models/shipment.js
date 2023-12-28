@@ -31,7 +31,26 @@ const shipmentSchema = new Schema({
             required: [true, 'Receiver phone is required'],
         }
     },
+    content: {
+        quantity: Number,
+        value: Number,
+        currency: String,
+        document: Boolean
+    },
+    weight: {
+        value: Number,
+        unit: String
+    },
+    charge: {
+        base: Number,
+        extra: Number,
+        gtgt: Number,
+        vat: Number,
+        other: Number,
+        total: Number
+    },
     
+
     progress: {
         type: [{
             from: {
@@ -47,7 +66,6 @@ const shipmentSchema = new Schema({
         }],
         required: [true, "Progress is required"]
     },
-    
     // create date
     shipmentDate: {
         type: Date,
@@ -68,81 +86,13 @@ const shipmentSchema = new Schema({
 
     guide: {
         type: String,
-        required: [true, 'guide is required']
     },
 
-    // content: {
-    //     quantity: {
-    //         type: Number,
-    //         required: [true, 'content quantity is required']
-    //     },
-    //     value: {
-    //         type: Number,
-    //         required: [true, 'content value is required']
-    //     },
-    //     currency: {
-    //         type: String,
-    //         required: [true, 'content currency is required']
-    //     },
-    //     document: {
-    //         type: Boolean,
-    //         required: [true, 'content document is required']
-    //     },
-    // },
-    // weight: {
-    //     value: {
-    //         type: Number,
-    //         required: [true, 'weight value is required']
-    //     },
-    //     unit: {
-    //         type: String,
-    //         required: [true, 'weight unit is required']
-    //     },
-    // },
-    // charge: {
-    //     base: {
-    //         type: Number,
-    //         required: [true, 'charge base is required']
-    //     },
-    //     extra: {
-    //         type: Number,
-    //         required: [true, 'charge extra is required']
-    //     },
-    //     gtgt: {
-    //         type: Number,
-    //         required: [true, 'charge gtgt is required']
-    //     },
-    //     vat: {
-    //         type: Number,
-    //         required: [true, 'charge vat is required']
-    //     },
-    //     other: {
-    //         type: Number,
-    //         required: [true, 'charge other is required']
-    //     },
-    //     total: {
-    //         type: Number,
-    //         required: [true, 'charge total is required']
-    //     }
-    // },
-    // isReceiverPay: {
-    //     type: Boolean,
-    //     required: [true, 'isReceiverPay is required']
-    // },
-    // receiverPay: {
-    //     cod: {
-    //         type: Number,
-    //         required: [true, 'receiverPay cod is required']
-    //     },
-    //     extra: {
-    //         type: Number,
-    //         required: [true, 'receiverPay extra is required']
-    //     },
-    //     total: {
-    //         type: Number,
-    //         required: [true, 'receiverPay total is required']
-    //     }
-    // },
+    receiverPay: {
+        cod: Number,
+        extra: Number,
+        total: Number
+    }
 }, {timestamps: true});
 
 // Validation function for receivedDate

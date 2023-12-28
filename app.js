@@ -9,6 +9,7 @@ const transcapRouter = require('./routers/transcapRouter.js');
 const gathercapRouter = require('./routers/gathercapRouter.js');
 const transstaffRouter = require('./routers/transstaffRouter.js');
 const gatherstaffRouter = require('./routers/gatherstaffRouter.js');
+const customerRouter = require('./routers/customerRouter.js');
 
 const app = express();
 
@@ -50,6 +51,9 @@ app.use('/transstaff', transstaffRouter);
 
 // Gatherstaff router
 app.use('/gatherstaff', gatherstaffRouter);
+
+// Customer router
+app.use('/customer', customerRouter);
 
 // 404 page
 app.use((req, res, err) => {

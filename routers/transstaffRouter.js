@@ -9,6 +9,9 @@ router.get('/', transstaffController.transstaff_index)
 // Create a shipment to send to the gather point
 router.post('/shipments', transstaffController.transstaff_shipment_create)
 
+// Generate shipment code for customer
+router.get('/shipments/guide', transstaffController.transstaff_generate_guide)
+
 // Update shipment info
 router.put('/shipments/:id', transstaffController.transstaff_shipment_update_info)
 

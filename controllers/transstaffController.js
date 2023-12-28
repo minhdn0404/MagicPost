@@ -1,6 +1,7 @@
 const Account = require('../models/account');
 const Point = require('../models/point');
 const Shipment = require('../models/shipment');
+const qr = require('qrcode');
 
 // Transstaff function
 
@@ -44,12 +45,10 @@ const transstaff_index = (req, res, next) => {
 }
 
 const transstaff_shipment_create = (req, res) => {
-    const senderInfo = req.body.senderInfo;
-    const receiverInfo = req.body.receiverInfo;
+    const shipmentInfo = req.body;
  
     const shipmentObject = {
-        senderInfo,
-        receiverInfo,
+        shipmentInfo,
         progress: [
             {
                 // Prepare to go out
@@ -72,6 +71,34 @@ const transstaff_shipment_create = (req, res) => {
     var newShipment = Shipment(shipmentObject).save();
     res.json(shipmentObject)
 }
+
+const transstaff_generate_guide = async (req, res) => {
+    try {
+        const shipmentID = req.body.id;
+
+        // Check if the document with the given shipmentID exists in the database
+        const shipment = await Shipment.findOne({ _id: shipmentID });
+
+        if (!shipment) {
+            console.error('Shipment not found');
+            return res.status(404).json({ error: 'Shipment not found' });
+        }
+
+        // Generate QR code data URL
+        const qrCodeUrl = await qr.toDataURL(shipmentID);
+
+        // Update the guide field in the Shipment document
+        shipment.guide = qrCodeUrl;
+
+        // Save the updated Shipment document
+        await shipment.save();
+
+        res.json({ guide: qrCodeUrl });
+    } catch (error) {
+        console.error('Error generating QR code:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 const transstaff_shipment_update_info = (req, res) => {
     const id = req.params.id
@@ -246,6 +273,7 @@ const transstaff_shipment_verify_returned = (req, res) => {
 module.exports = {
     transstaff_index,
     transstaff_shipment_create,
+    transstaff_generate_guide,
     transstaff_shipment_update_info,
     transstaff_shipment_delete,
     transstaff_shipment_send_to_gather,
