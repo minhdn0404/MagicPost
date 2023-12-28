@@ -61,9 +61,14 @@ const shipmentSchema = new Schema({
     status: {
         type: [{
             type: String,
-            enum: ['Pending', 'Pre-Transit', 'Gather-From', 'In-Transit', 'Gather-To', 'Post-Transit', 'Received', 'Out for delivery', 'Success' , 'Failed', 'Returned"'],
+            enum: ['Pending', 'Pre-Transit', 'Gather-From', 'In-Transit', 'Gather-To', 'Post-Transit', 'Received', 'Out for delivery', 'Success' , 'Failed', 'Returned'],
         }],
         required: [true, 'status is required']
+    },
+
+    guide: {
+        type: String,
+        required: [true, 'guide is required']
     },
 
     // content: {
@@ -83,10 +88,6 @@ const shipmentSchema = new Schema({
     //         type: Boolean,
     //         required: [true, 'content document is required']
     //     },
-    // },
-    // guide: {
-    //     type: Number,
-    //     required: [true, 'guide is required']
     // },
     // weight: {
     //     value: {
