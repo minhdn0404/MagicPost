@@ -15,4 +15,7 @@ router.post('/shipments/:id/create-point', gatherstaffController.gatherstaff_shi
 // Verify shipment sent from a gather point
 router.post('/shipments/:id/confirm-point', gatherstaffController.gatherstaff_shipment_verify_from_gather)
 
+// Sending shipment to the target trans point
+router.post('/shipments/:id/create', gatherstaffController.gatherstaff_shipment_send_to_trans)
+
 module.exports = router;
