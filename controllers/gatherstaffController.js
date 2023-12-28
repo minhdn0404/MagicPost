@@ -63,12 +63,50 @@ const gatherstaff_shipment_verify_from_trans = (req, res) => {
         });
 }
 
-const gatherstaff_shipment_send_to_gather = (req, res) => {
+const gatherstaff_shipment_send_to_gather = async (req, res) => {
+    const shipmentID = req.params.id;
+    const gatherTargetID = req.body.id;
 
+    try {
+        const shipment = await Shipment.findOne({ _id: shipmentID });
+
+        if (shipment.status[shipment.status.length - 1] === "Gather-From") {
+            shipment.status.push("In-Transit");
+            await shipment.save();
+
+            const newProgress = {
+                from: "Gather",
+                pointID: req.session.capPointID,
+                fromID: req.session.capPointID,
+                toID: gatherTargetID,
+                date: new Date(),
+                staffID: req.session.gatherstaffID
+            };
+
+            shipment.progress.push(newProgress);
+            await shipment.save();
+
+            res.status(200).json({
+                progress: shipment.progress,
+                status: shipment.status
+            });
+        } else {
+            res.status(400).json({ msg: "Failed" });
+        }
+    } catch (error) {
+        console.error("Error sending shipment to gather:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+const gatherstaff_shipment_verify_from_gather = (req, res) => {
+    const shipmentID = req.params.id;
+    
 }
 
 module.exports = {
     gatherstaff_index,
     gatherstaff_shipment_verify_from_trans,
-    gatherstaff_shipment_send_to_gather
+    gatherstaff_shipment_send_to_gather,
+    gatherstaff_shipment_verify_from_gather
 }
