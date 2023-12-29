@@ -2,8 +2,8 @@ const Shipment = require('../models/shipment');
 
 // Customer function
 const customer_tracking = (req, res) => {
-    const guide = req.body.guide;
-    Shipment.findOne({guide: guide})
+    const id = req.body.id;
+    Shipment.findById(id)
     .then((result) => {
         res.json(result);
     })
