@@ -1,5 +1,6 @@
 const express = require('express');
-const transstaffController = require('../controllers/transstaffController')
+const transstaffController = require('../controllers/transstaffController');
+const { route } = require('./managerRouter');
 
 const router = express.Router();
 
@@ -32,5 +33,8 @@ router.post('/shipments/:id/confirm-delivery', transstaffController.transstaff_s
 
 // Verify that shipment not received by receiver and returned to trans point
 router.post('/shipments/:id/return/', transstaffController.transstaff_shipment_verify_returned)
+
+// Statistic of shipment
+router.get('/shipments/statistics')
 
 module.exports = router;

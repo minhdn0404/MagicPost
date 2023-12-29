@@ -3,7 +3,6 @@ const Account = require('../models/account');
 const Point = require('../models/point')
 
 // Manager function
-
 const manager_index = (req, res, next) => {
     Account.find({ role: "manager" })
     .then((result) => {

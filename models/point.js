@@ -29,6 +29,16 @@ const pointSchema = new Schema({
             return this.type === "trans";
         },
         message: 'gatherPointID is required for type "trans"'
+    },
+    statistic: {
+        type: [{
+            date: Date,
+            shipmentID: String,
+            move: {
+                type: String,
+                enum: ["IN", "OUT"]
+            }
+        }]
     }
 }, {timestamps: true}); // Automatically generate timestamp properties on the document
 

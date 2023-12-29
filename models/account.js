@@ -13,6 +13,7 @@ const accountSchema = new Schema({
     },
     role: {
         type: String,
+        enum: ['manager', 'trans_cap', 'trans_staff', 'gather_cap', 'gather_staff'],
         required: [true, 'Role is required']
     },
     capPointID: {
