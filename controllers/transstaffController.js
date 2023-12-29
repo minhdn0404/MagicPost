@@ -130,7 +130,8 @@ const transstaff_shipment_delete = (req, res) => {
 }
 
 const transstaff_shipment_send_to_gather = (req, res) => {
-    const id = req.params.id
+    const id = req.params.id;
+
     Shipment.findOne({ _id: id })
         .then(updatingShipment => {
             if (!updatingShipment) {
@@ -144,15 +145,31 @@ const transstaff_shipment_send_to_gather = (req, res) => {
             return updatingShipment.save();
         })
         .then(updatedShipment => {
-            // Respond with the entire updated shipment object
-            res.json(updatedShipment.status);
+            // Find the Point document
+            return Point.findOne({ _id: req.session.capPointID });
+        })
+        .then(point => {
+            if (!point) {
+                throw new Error("Point not found");
+            }
+
+            // Update the Point document's statistic
+            var stat_date = new Date();
+            const stat = { date: stat_date, shipmentID: req.session.capPointID, move: "OUT" };
+            point.statistic.push(stat);
+
+            // Save the updated Point document
+            return point.save();
+        })
+        .then(() => {
+            // Respond with the status array from the updated shipment
+            res.json({ message: "Shipment sent to gather successfully" });
         })
         .catch(error => {
-            console.error("Error updating shipment: ", error);
+            console.error("Error updating shipment or point: ", error);
             res.status(500).json({ error: "Internal Server Error" });
         });
-
-}
+};
 
 const transstaff_shipment_verify_from_gather = (req, res) => {
     const shipmentID = req.params.id;

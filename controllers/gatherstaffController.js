@@ -46,8 +46,19 @@ const gatherstaff_shipment_verify_from_trans = (req, res) => {
                 shipment.progress[shipment.progress.length - 1].from === "Trans" &&
                 shipment.progress[shipment.progress.length - 1].toID === req.session.capPointID
             ) {
-                shipment.status.push("Gather-From");
-                shipment.save()
+                Point.findOne({ _id: req.session.capPointID })
+                    .then((point) => {
+                        var stat_date = new Date();
+                        const stat = { date: stat_date, shipmentID: req.session.capPointID, move: "IN" };
+                        point.statistic.push(stat);
+
+                        // Use return to pass the promise to the next `.then()`
+                        return point.save();
+                    })
+                    .then(() => {
+                        shipment.status.push("Gather-From");
+                        return shipment.save();
+                    })
                     .then(updatedShipment => {
                         res.status(200).json(updatedShipment.status);
                     })
@@ -61,7 +72,7 @@ const gatherstaff_shipment_verify_from_trans = (req, res) => {
         .catch((error) => {
             res.status(404).json({ error: "Not found" });
         });
-}
+};
 
 const gatherstaff_shipment_send_to_gather = async (req, res) => {
     const shipmentID = req.params.id;
