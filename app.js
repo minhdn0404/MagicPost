@@ -6,10 +6,17 @@ import authenticationRoute from "./routers/authenticationRoute.js";
 
 import express from "express";
 import morgan from "morgan";
+import session from "express-session";
 import cors from "cors";
 import mongoose from "mongoose";
 
+import bodyParser from "body-parser"
 import managerRouter from "./routers/managerRouter.js";
+import transcapRouter from "./routers/transcapRouter.js";
+import gathercapRouter from "routers/gathercapRouter.js";
+import transstaffRouter from "./routers/transstaffRouter.js";
+import gatherstaffRouter from "./routers/gatherstaffRouter.js";
+import customerRouter from "./routers/customerRouter.js";
 dotenv.config();
 const { URI, PORT, SECRET_ACCESS_TOKEN } = process.env;
 
@@ -46,12 +53,37 @@ app.get("/verifyrole", Verify , VerifyRole, (req, res) => {
         status: "success",
         message: "Welcome to the Admin portal!",
     });
-
 });
 
 app.use("/auth", authenticationRoute);
 
+app.use(session({
+    secret: 'peter', 
+    resave: false,
+    saveUninitialized: true,
+}));
+
+// Manager Router
+app.use('/manager', managerRouter);
+
 // Transcap Router
 app.use('/transcap', transcapRouter);
+
+// Gathercap router
+app.use('/gathercap', gathercapRouter);
+
+// Transstaff router
+app.use('/transstaff', transstaffRouter);
+
+// Gatherstaff router
+app.use('/gatherstaff', gatherstaffRouter);
+
+// Customer router
+app.use('/customer', customerRouter);
+
+// 404 page
+app.use((req, res, err) => {
+    res.status(404).send({error: "Page not Found"})
+})
 
 export {URI, PORT, SECRET_ACCESS_TOKEN, app};

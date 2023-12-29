@@ -2,7 +2,6 @@ import Account from '../models/account.js';
 import Point from '../models/point.js';
 
 // Manager function
-
 const manager_index = (req, res, next) => {
     Account.find({ role: "manager" })
     .then((result) => {
