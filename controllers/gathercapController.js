@@ -1,5 +1,5 @@
-const Account = require('../models/account');
-const Point = require('../models/point')
+import Account from "../models/account.js";
+import Point from "../models/point.js";
 
 // Gathercap function
 
@@ -123,7 +123,7 @@ const gathercap_shipment_statistic = async (req, res) => {
     }
 };
 
-module.exports = {
+const gathercapController = {
     gathercap_index,
     gathercap_staffs_get,
     gathercap_staff_create,
@@ -131,3 +131,5 @@ module.exports = {
     gathercap_staff_delete,
     gathercap_shipment_statistic
 }
+
+export default gathercapController

@@ -1,5 +1,5 @@
-const express = require('express');
-const gathercapController = require('../controllers/gathercapController');
+import express from 'express';
+import gathercapController from '../controllers/gathercapController.js';
 
 const router = express.Router();
 
@@ -21,4 +21,4 @@ router.delete('/accounts/:id', gathercapController.gathercap_staff_delete)
 // Statistic
 router.get('/statistics/', gathercapController.gathercap_shipment_statistic)
 
-module.exports = router;
+export default router;

@@ -1,7 +1,7 @@
-const Account = require('../models/account');
-const Point = require('../models/point');
-const Shipment = require('../models/shipment');
-const qr = require('qrcode');
+import Account from "../models/account.js";
+import Point from "../models/point.js";
+import Shipment from "../models/shipment.js";
+import qr from "qrcode";
 
 // Transstaff function
 
@@ -71,8 +71,10 @@ const transstaff_shipment_create = (req, res) => {
 
     // res.status(200).json({senderInfo, receiverInfo});
     // console.log(req.session.transstaffID, req.session.captainID, req.session.capPointID, req.session.gatherPointID)
-    var newShipment = Shipment(shipmentObject).save();
-    res.json(shipmentObject)
+    let newShipment = Shipment(shipmentObject);
+    newShipment.save();
+    console.log(newShipment)
+    res.json(newShipment)
 }
 
 const transstaff_generate_guide = async (req, res) => {
@@ -131,7 +133,7 @@ const transstaff_shipment_delete = (req, res) => {
 
 const transstaff_shipment_send_to_gather = (req, res) => {
     const id = req.params.id;
-
+    console.log(id)
     Shipment.findOne({ _id: id })
         .then(updatingShipment => {
             if (!updatingShipment) {
@@ -144,23 +146,23 @@ const transstaff_shipment_send_to_gather = (req, res) => {
             // Save the updated shipment to the database
             return updatingShipment.save();
         })
-        .then(updatedShipment => {
-            // Find the Point document
-            return Point.findOne({ _id: req.session.capPointID });
-        })
-        .then(point => {
-            if (!point) {
-                throw new Error("Point not found");
-            }
-
-            // Update the Point document's statistic
-            var stat_date = new Date();
-            const stat = { date: stat_date, shipmentID: req.session.capPointID, move: "OUT" };
-            point.statistic.push(stat);
-
-            // Save the updated Point document
-            return point.save();
-        })
+        // .then(updatedShipment => {
+        //     // Find the Point document
+        //     return Point.findOne({ _id: req.session.capPointID });
+        // })
+        // .then(point => {
+        //     if (!point) {
+        //         throw new Error("Point not found");
+        //     }
+        //
+        //     // Update the Point document's statistic
+        //     var stat_date = new Date();
+        //     const stat = { date: stat_date, shipmentID: req.session.capPointID, move: "OUT" };
+        //     point.statistic.push(stat);
+        //
+        //     // Save the updated Point document
+        //     return point.save();
+        // })
         .then(() => {
             // Respond with the status array from the updated shipment
             res.json({ message: "Shipment sent to gather successfully" });
@@ -344,7 +346,7 @@ const transstaff_shipment_statistic = async (req, res) => {
     }
 };
 
-module.exports = {
+export default {
     transstaff_index,
     transstaff_shipment_create,
     transstaff_generate_guide,

@@ -179,8 +179,6 @@ export async function Logout(req, res) {
             token: accessToken,
         });
         await newBlacklist.save();
-        // Also clear request cookie on client
-        res.setHeader('Clear-Site-Data', '"cookies"');
         res.status(200).json({ message: 'You are logged out!' });
     } catch (err) {
         res.status(500).json({

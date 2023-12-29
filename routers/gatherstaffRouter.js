@@ -1,5 +1,5 @@
-const express = require('express');
-const gatherstaffController = require('../controllers/gatherstaffController')
+import express from 'express';
+import gatherstaffController from '../controllers/gatherstaffController.js';
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post('/shipments/:id/confirm-point', gatherstaffController.gatherstaff_sh
 // Sending shipment to the target trans point
 router.post('/shipments/:id/create', gatherstaffController.gatherstaff_shipment_send_to_trans)
 
-module.exports = router;
+export default router;

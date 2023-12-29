@@ -1,4 +1,4 @@
-const Shipment = require('../models/shipment');
+import Shipment from "../models/shipment.js";
 
 // Customer function
 const customer_tracking = (req, res) => {
@@ -12,6 +12,6 @@ const customer_tracking = (req, res) => {
     })
 }
 
-module.exports = {
+export default {
     customer_tracking
 }

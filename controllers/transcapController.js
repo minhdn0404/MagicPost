@@ -1,5 +1,5 @@
-const Account = require('../models/account');
-const Point = require('../models/point')
+import Account from "../models/account.js";
+import Point from "../models/point.js";
 
 // Transcap function
 
@@ -124,7 +124,7 @@ const transcap_shipment_statistic = async (req, res) => {
     }
 }; 
 
-module.exports = {
+export default {
     transcap_index,
     transcap_staffs_get,
     transcap_staff_create,

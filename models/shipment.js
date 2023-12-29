@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 // Shipment Schema
@@ -112,4 +112,4 @@ shipmentSchema.path('receivedDate').validate(function(value) {
 
 const Shipment = mongoose.model('Shipment', shipmentSchema)
 
-module.exports = Shipment;
+export default Shipment;

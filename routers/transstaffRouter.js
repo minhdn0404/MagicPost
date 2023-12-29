@@ -1,6 +1,5 @@
-const express = require('express');
-const transstaffController = require('../controllers/transstaffController');
-const { route } = require('./managerRouter');
+import express from 'express';
+import transstaffController from '../controllers/transstaffController.js';
 
 const router = express.Router();
 
@@ -37,4 +36,4 @@ router.post('/shipments/:id/return/', transstaffController.transstaff_shipment_v
 // Statistic of shipment
 router.get('/shipments/statistics', transstaffController.transstaff_shipment_statistic)
 
-module.exports = router;
+export default router;

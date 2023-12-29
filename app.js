@@ -13,7 +13,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser"
 import managerRouter from "./routers/managerRouter.js";
 import transcapRouter from "./routers/transcapRouter.js";
-import gathercapRouter from "routers/gathercapRouter.js";
+import gathercapRouter from "./routers/gathercapRouter.js";
 import transstaffRouter from "./routers/transstaffRouter.js";
 import gatherstaffRouter from "./routers/gatherstaffRouter.js";
 import customerRouter from "./routers/customerRouter.js";
@@ -24,7 +24,7 @@ const app = express();
 
 // Connect to mongodb
 mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true})
-    .then((result) => console.log("Connected to db"))
+    .then(() => console.log("Connected to db"))
     .catch((err) => console.log(err));
 mongoose.Promise = global.Promise;
 
@@ -58,7 +58,7 @@ app.get("/verifyrole", Verify , VerifyRole, (req, res) => {
 app.use("/auth", authenticationRoute);
 
 app.use(session({
-    secret: 'peter', 
+    secret: 'peter',
     resave: false,
     saveUninitialized: true,
 }));

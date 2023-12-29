@@ -1,5 +1,5 @@
-const express = require('express');
-const transcapController = require('../controllers/transcapController');
+import express from 'express';
+import transcapController from '../controllers/transcapController.js';
 
 const router = express.Router();
 
@@ -21,4 +21,4 @@ router.delete('/accounts/:id', transcapController.transcap_staff_delete)
 // Statistic
 router.get('/statistics/', transcapController.transcap_shipment_statistic)
 
-module.exports = router;
+export default router;

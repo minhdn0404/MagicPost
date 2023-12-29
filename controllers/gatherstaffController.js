@@ -1,6 +1,6 @@
-const Account = require('../models/account');
-const Point = require('../models/point');
-const Shipment = require('../models/shipment');
+import Account from "../models/account.js";
+import Point from "../models/point.js";
+import Shipment from "../models/shipment.js";
 
 // Gather staff function
 const gatherstaff_index = (req, res) => {
@@ -204,7 +204,7 @@ const gatherstaff_shipment_send_to_trans = async (req, res) => {
     }
 };
 
-module.exports = {
+export default {
     gatherstaff_index,
     gatherstaff_shipment_verify_from_trans,
     gatherstaff_shipment_send_to_gather,
