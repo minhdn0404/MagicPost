@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 // Point Schema
@@ -53,4 +54,4 @@ const Point = mongoose.model('Point', pointSchema)
 // var p = Point({name: 'p13', address: '121 NX', type: 'trans', managed: false, gatherPointID: "658a7a3659eecab826cfb608"}).save()
 // var p = Point({name: 'p14', address: '22 PVĐ', type: 'trans', managed: false, gatherPointID: "658a7c0ced2c0acbf3f5cf8f"}).save()
 
-module.exports = Point;
+export default Point;

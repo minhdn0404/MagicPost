@@ -1,5 +1,5 @@
-const express = require('express');
-const managerController = require('../controllers/managerController');
+import express from 'express';
+import managerController from '../controllers/managerController.js';
 
 const router = express.Router();
 
@@ -39,4 +39,4 @@ router.put('/accounts/:id', managerController.manager_captain_update)
 // Delete captain account
 router.delete('/accounts/:id', managerController.manager_captain_delete)
 
-module.exports = router;
+export default router;
