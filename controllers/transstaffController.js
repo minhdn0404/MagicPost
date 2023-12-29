@@ -88,7 +88,7 @@ const transstaff_generate_guide = async (req, res) => {
         }
 
         // Generate QR code data URL
-        const qrCodeUrl = await qr.toDataURL(shipmentID);
+        const qrCodeUrl = qr.toDataURL(shipmentID);
 
         // Update the guide field in the Shipment document
         shipment.guide = qrCodeUrl;
