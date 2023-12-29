@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 // Shipment Schema
 const shipmentSchema = new Schema({
+    
     senderInfo: {
         name: {
             type: String,

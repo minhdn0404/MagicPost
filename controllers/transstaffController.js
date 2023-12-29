@@ -45,10 +45,13 @@ const transstaff_index = (req, res, next) => {
 }
 
 const transstaff_shipment_create = (req, res) => {
-    const shipmentInfo = req.body;
  
     const shipmentObject = {
-        shipmentInfo,
+        senderInfo: req.body.senderInfo,
+        receiverInfo: req.body.receiverInfo,
+        content: req.body.content,
+        weight: req.body.weight,
+        charge: req.body.charge,
         progress: [
             {
                 // Prepare to go out
