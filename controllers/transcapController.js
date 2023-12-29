@@ -103,10 +103,32 @@ const transcap_staff_delete = (req, res) => {
     })
 }
 
+const transcap_shipment_statistic = async (req, res) => {
+    try {
+        const captain = await Account.findOne({ _id: req.session.transcapID });
+
+        if (!captain) {
+            return res.status(404).json({ error: "Captain not found" });
+        }
+
+        const point = await Point.findOne({ _id: captain.capPointID });
+
+        if (!point) {
+            return res.status(404).json({ error: "Point not found" });
+        }
+
+        res.json(point.statistic);
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}; 
+
 module.exports = {
     transcap_index,
     transcap_staffs_get,
     transcap_staff_create,
     transcap_staff_update,
-    transcap_staff_delete
+    transcap_staff_delete,
+    transcap_shipment_statistic
 }

@@ -18,4 +18,7 @@ router.put('/accounts/:id', transcapController.transcap_staff_update)
 // Delete trans_staff acc
 router.delete('/accounts/:id', transcapController.transcap_staff_delete)
 
+// Statistic
+router.get('/statistics/', transcapController.transcap_shipment_statistic)
+
 module.exports = router;

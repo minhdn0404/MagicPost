@@ -18,4 +18,7 @@ router.put('/accounts/:id', gathercapController.gathercap_staff_update)
 // Delete gather_staff acc
 router.delete('/accounts/:id', gathercapController.gathercap_staff_delete)
 
+// Statistic
+router.get('/statistics/', gathercapController.gathercap_shipment_statistic)
+
 module.exports = router;

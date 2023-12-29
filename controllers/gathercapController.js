@@ -102,10 +102,32 @@ const gathercap_staff_delete = (req, res) => {
     })
 }
 
+const gathercap_shipment_statistic = async (req, res) => {
+    try {
+        const captain = await Account.findOne({ _id: req.session.gathercapID });
+
+        if (!captain) {
+            return res.status(404).json({ error: "Captain not found" });
+        }
+
+        const point = await Point.findOne({ _id: captain.capPointID });
+
+        if (!point) {
+            return res.status(404).json({ error: "Point not found" });
+        }
+
+        res.json(point.statistic);
+    } catch (error) {
+        console.error("Error in gathercap_shipment_statistic:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     gathercap_index,
     gathercap_staffs_get,
     gathercap_staff_create,
     gathercap_staff_update,
-    gathercap_staff_delete
+    gathercap_staff_delete,
+    gathercap_shipment_statistic
 }

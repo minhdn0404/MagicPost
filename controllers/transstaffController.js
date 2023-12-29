@@ -171,42 +171,60 @@ const transstaff_shipment_send_to_gather = (req, res) => {
         });
 };
 
-const transstaff_shipment_verify_from_gather = (req, res) => {
-    const shipmentID = req.params.id;
-    Shipment.findOne({ _id: shipmentID })
-        .then((shipment) => {
-            if (
-                shipment &&
-                shipment.status.length > 0 &&
-                shipment.status[shipment.status.length - 1] === "Post-Transit" &&
-                shipment.progress.length > 0 &&
-                shipment.progress[shipment.progress.length - 1].from === "Gather" &&
-                shipment.progress[shipment.progress.length - 1].toID === req.session.capPointID
-            ) {
-                shipment.status.push("Received");
-                shipment.save()
-                    .then(updatedShipment => {
-                        res.status(200).json(updatedShipment.status);
-                    })
-                    .catch((saveError) => {
-                        res.status(500).json({ error: "Failed to save shipment status" });
-                    });
+const transstaff_shipment_verify_from_gather = async (req, res) => {
+    try {
+        const shipmentID = req.params.id;
+        const shipment = await Shipment.findOne({ _id: shipmentID });
+
+        if (
+            shipment &&
+            shipment.status.length > 0 &&
+            shipment.status[shipment.status.length - 1] === "Post-Transit" &&
+            shipment.progress.length > 0 &&
+            shipment.progress[shipment.progress.length - 1].from === "Gather" &&
+            shipment.progress[shipment.progress.length - 1].toID === req.session.capPointID
+        ) {
+            const point = await Point.findOne({ _id: req.session.capPointID });
+
+            if (point) {
+                var stat_date = new Date();
+                const stat = { date: stat_date, shipmentID: req.session.capPointID, move: "IN" };
+                point.statistic.push(stat);
+                await point.save();
             } else {
-                res.json({ msg: "Failed" });
+                return res.status(404).json({ error: "Point not found" });
             }
-        })
-        .catch((error) => {
-            res.status(404).json({ error: "Not found" });
-        });
-}
+
+            shipment.status.push("Received");
+            await shipment.save();
+
+            res.status(200).json(shipment.status);
+        } else {
+            res.json({ msg: "Failed" });
+        }
+    } catch (error) {
+        console.error("Error verifying shipment from gather:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
 
 const transstaff_shipment_send_to_receiver = async (req, res) => {
-    const shipmentID = req.params.id;
-
     try {
+        const shipmentID = req.params.id;
         const shipment = await Shipment.findOne({ _id: shipmentID });
 
         if (shipment.status[shipment.status.length - 1] === "Received") {
+            const point = await Point.findOne({ _id: req.session.capPointID });
+
+            if (point) {
+                var stat_date = new Date();
+                const stat = { date: stat_date, shipmentID: req.session.capPointID, move: "OUT" };
+                point.statistic.push(stat);
+                await point.save();
+            } else {
+                return res.status(404).json({ error: "Point not found" });
+            }
+
             shipment.status.push("Out for delivery");
             await shipment.save();
 
@@ -230,10 +248,10 @@ const transstaff_shipment_send_to_receiver = async (req, res) => {
             res.status(400).json({ msg: "Failed" });
         }
     } catch (error) {
-        console.error("Error sending shipment to trans:", error);
+        console.error("Error sending shipment to receiver:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-}
+};
 
 const transstaff_shipment_verify_to_receiver = (req, res) => {
     const shipmentID = req.params.id;
@@ -290,6 +308,42 @@ const transstaff_shipment_verify_returned = (req, res) => {
         });
 }
 
+const transstaff_shipment_statistic = async (req, res) => {
+    try {
+        const point = await Point.findOne({ _id: req.session.capPointID });
+
+        if (!point) {
+            return res.status(404).json({ error: "Point not found" });
+        }
+
+        const result = {
+            success: [],
+            return: []
+        };
+
+        for (const stat of point.statistic) {
+            if (stat.move === "OUT") {
+                const shipment = await Shipment.findOne({ _id: stat.shipmentID });
+
+                if (shipment) {
+                    const lastStatus = shipment.status[shipment.status.length - 1];
+
+                    if (lastStatus === "Success") {
+                        result.success.push(stat.shipmentID);
+                    } else if (lastStatus === "Returned") {
+                        result.return.push(stat.shipmentID);
+                    }
+                }
+            }
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error("Error in transstaff_shipment_statistic:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     transstaff_index,
     transstaff_shipment_create,
@@ -300,5 +354,6 @@ module.exports = {
     transstaff_shipment_verify_from_gather,
     transstaff_shipment_send_to_receiver,
     transstaff_shipment_verify_to_receiver,
-    transstaff_shipment_verify_returned
+    transstaff_shipment_verify_returned,
+    transstaff_shipment_statistic
 }

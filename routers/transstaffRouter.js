@@ -35,6 +35,6 @@ router.post('/shipments/:id/confirm-delivery', transstaffController.transstaff_s
 router.post('/shipments/:id/return/', transstaffController.transstaff_shipment_verify_returned)
 
 // Statistic of shipment
-router.get('/shipments/statistics')
+router.get('/shipments/statistics', transstaffController.transstaff_shipment_statistic)
 
 module.exports = router;
